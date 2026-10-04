@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fear of Rejection Test — The Search for Significance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #EDF0F4;
+  --surface: #FFFFFF;
+  --ink: #1F2A44;
+  --muted: #5B6B85;
+  --line: #D3DAE4;
+  --accent: #B8862C;
+  --accent-soft: #F3E7CF;
+  --sel-ink: #FFFFFF;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141A28; --surface: #1C2436; --ink: #E6EAF2; --muted: #9AA7BE;
+    --line: #2F3A52; --accent: #D9AC57; --accent-soft: #3A3122; --sel-ink: #141A28;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141A28; --surface: #1C2436; --ink: #E6EAF2; --muted: #9AA7BE;
+  --line: #2F3A52; --accent: #D9AC57; --accent-soft: #3A3122; --sel-ink: #141A28;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.5;
+}
+.wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 56px; }
+header h1 {
+  font-family: "Spectral", Georgia, "Times New Roman", serif;
+  font-weight: 500; font-size: clamp(2rem, 6vw, 2.75rem); line-height: 1.1;
+  margin: 0 0 10px; letter-spacing: -0.01em;
+}
+.credit { color: var(--muted); margin: 0; font-size: 0.95rem; }
+.credit cite { font-family: "Spectral", Georgia, serif; font-style: italic; font-size: 1.05rem; color: var(--ink); }
+
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 28px 24px; margin-top: 28px;
+}
+.intro p { font-family: "Spectral", Georgia, serif; font-size: 1.1rem; line-height: 1.65; margin: 0 0 14px; }
+.intro p.small { font-family: inherit; font-size: 0.93rem; color: var(--muted); line-height: 1.55; }
+
+button { font: inherit; cursor: pointer; }
+.primary {
+  background: var(--ink); color: var(--bg); border: none; border-radius: 999px;
+  padding: 12px 26px; font-weight: 600;
+}
+.primary:hover { opacity: 0.9; }
+.ghost {
+  background: none; border: 1px solid var(--line); color: var(--ink);
+  border-radius: 999px; padding: 10px 20px; font-weight: 500;
+}
+.ghost:disabled { opacity: 0.35; cursor: default; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.progress { display: flex; gap: 6px; margin-bottom: 22px; }
+.progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--line); transition: background .2s; }
+.progress span.done { background: var(--muted); }
+.progress span.now { background: var(--accent); }
+.count { color: var(--muted); font-size: 0.9rem; margin: 0 0 8px; }
+.statement {
+  font-family: "Spectral", Georgia, serif; font-size: clamp(1.5rem, 4.6vw, 1.95rem);
+  line-height: 1.3; margin: 0 0 28px; min-height: 2.6em;
+}
+
+.scale { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.opt {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 2px 10px; color: var(--ink);
+}
+.opt .n { font-family: "Spectral", Georgia, serif; font-size: 1.35rem; font-weight: 600; line-height: 1; }
+.opt .l { font-size: 0.72rem; color: var(--muted); line-height: 1.2; text-align: center; }
+.opt:hover { border-color: var(--accent); }
+.opt.sel { background: var(--accent); border-color: var(--accent); color: var(--sel-ink); }
+.opt.sel .l { color: var(--sel-ink); }
+.ends { display: none; justify-content: space-between; color: var(--muted); font-size: 0.8rem; margin-top: 8px; }
+@media (max-width: 520px) {
+  .opt .l { display: none; }
+  .ends { display: flex; }
+}
+.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 26px; }
+.hint { color: var(--muted); font-size: 0.82rem; }
+@media (max-width: 520px) { .hint { display: none; } }
+
+.score-line { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+.score { font-family: "Spectral", Georgia, serif; font-size: 4.2rem; font-weight: 600; line-height: 1; }
+.score-of { color: var(--muted); }
+.band-name { font-family: "Spectral", Georgia, serif; font-size: 1.45rem; line-height: 1.3; margin: 10px 0 12px; }
+.band-text { font-family: "Spectral", Georgia, serif; font-size: 1.08rem; line-height: 1.65; margin: 0; }
+
+.meter { margin: 26px 0 8px; }
+.meter-track { position: relative; display: flex; height: 34px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.meter-track div { border-right: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); }
+.meter-track div:last-child { border-right: none; }
+.meter-track div.on { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.marker { position: relative; height: 14px; }
+.marker i { position: absolute; top: 2px; width: 2px; height: 12px; background: var(--accent); transform: translateX(-1px); }
+.meter-ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8rem; }
+
+details { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 16px; }
+summary { cursor: pointer; font-weight: 500; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.93rem; }
+td { padding: 8px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.v { text-align: right; white-space: nowrap; color: var(--muted); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.care { font-size: 0.88rem; color: var(--muted); margin-top: 22px; line-height: 1.55; }
+
+footer { margin-top: 32px; font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+footer cite { font-style: italic; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Fear of Rejection Test</h1>
+    <p class="credit">From <cite>The Search for Significance</cite> by Robert S. McGee</p>
+  </header>
+
+  <section class="panel intro" id="intro">
+    <p>McGee describes a false belief many of us live by: that we must be approved by certain others to feel good about ourselves. That belief breeds a fear of rejection that bends our attitudes and actions toward what others expect.</p>
+    <p>This short test helps you gauge how strongly that fear shapes your life. You'll see ten statements. For each, choose how often it's true of you, from <em>Always</em> to <em>Never</em>.</p>
+    <p class="small">Answer honestly rather than how you wish you were. It takes about two minutes.</p>
+    <button class="primary" id="start">Begin the test</button>
+  </section>
+
+  <section class="panel" id="quiz" hidden>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <p class="count" id="count"></p>
+    <h2 class="statement" id="statement" aria-live="polite"></h2>
+    <div class="scale" id="scale" role="radiogroup" aria-labelledby="statement"></div>
+    <div class="ends"><span>1 = Always</span><span>7 = Never</span></div>
+    <div class="nav">
+      <button class="ghost" id="back">Back</button>
+      <span class="hint">Tip: press keys 1–7 to answer</span>
+    </div>
+  </section>
+
+  <section class="panel" id="result" hidden>
+    <div class="score-line">
+      <span class="score" id="score"></span>
+      <span class="score-of">out of 70</span>
+    </div>
+    <div class="meter">
+      <div class="meter-track" id="track"></div>
+      <div class="marker"><i id="pin"></i></div>
+      <div class="meter-ends"><span>Stronger fear</span><span>Less fear</span></div>
+    </div>
+    <h2 class="band-name" id="bandName"></h2>
+    <p class="band-text" id="bandText"></p>
+    <details>
+      <summary>Review your answers</summary>
+      <table id="review"></table>
+    </details>
+    <div class="actions">
+      <button class="primary" id="retake">Take the test again</button>
+    </div>
+    <p class="care">This is a reflection tool, not a diagnosis. If you're carrying heavy feelings of rejection or depression, consider talking with a pastor, counselor, or someone you trust.</p>
+  </section>
+
+  <footer>
+    Test and scoring adapted from <cite>The Search for Significance</cite> by Robert S. McGee. All rights to the original work belong to the author and publisher. Result descriptions are summarized from the book; for the full teaching, see the original.
+  </footer>
+</div>
+
+<script>
+const statements = [
+  "I avoid certain people.",
+  "When I sense that someone might reject me, I become nervous and anxious.",
+  "I am uncomfortable around those who are different from me.",
+  "It bothers me when someone is unfriendly to me.",
+  "I am basically shy and unsocial.",
+  "I am critical of others.",
+  "I find myself trying to impress others.",
+  "I become depressed when someone criticizes me.",
+  "I always try to determine what people think of me.",
+  "I don't understand people and what motivates them."
+];
+const labels = ["Always","Very often","Often","Sometimes","Seldom","Very seldom","Never"];
+const bands = [
+  { min: 57, max: 70, short: "57–70", name: "Largely free from the fear of rejection",
+    text: "You appear to have a deep grasp of God's love and unconditional acceptance, and seem freed from the fear of rejection that troubles most people. McGee adds a caution: a few people who score this high are either fooling themselves or have numbed their emotions to avoid pain." },
+  { min: 47, max: 56, short: "47–56", name: "Fear of rejection rarely controls you",
+    text: "The fear of rejection drives your responses only rarely, or only in particular situations. As with the highest range, the main exception is someone who hasn't been fully honest with themselves." },
+  { min: 37, max: 46, short: "37–46", name: "Rejection may be behind your struggles",
+    text: "When emotional problems come, they may be tied to a sense of rejection. Looking back, you can probably trace many past decisions to this fear, and it will likely shape future decisions too unless you take deliberate steps to overcome it." },
+  { min: 27, max: 36, short: "27–36", name: "A constant backdrop to your life",
+    text: "The fear of rejection sits in the background of your everyday life, and few days go by without it affecting you somehow. Sadly, it takes away the joy and peace your salvation is meant to bring." },
+  { min: 0, max: 26, short: "10–26", name: "Rejection weighs heavily on you",
+    text: "Memories of rejection likely dominate, and they may have led to a great deal of depression. McGee is clear that this won't simply fade with time; it calls for decisive action and deep healing in how you see yourself, in your relationship with God, and in your relationships with others." }
+];
+
+const $ = id => document.getElementById(id);
+let answers = new Array(statements.length).fill(null);
+let current = 0;
+
+function show(id) {
+  ["intro","quiz","result"].forEach(s => $(s).hidden = s !== id);
+}
+
+function renderQuestion() {
+  $("progress").innerHTML = statements.map((_, i) =>
+    `<span class="${i < current ? 'done' : i === current ? 'now' : ''}"></span>`).join("");
+  $("count").textContent = `Statement ${current + 1} of ${statements.length}`;
+  $("statement").textContent = statements[current];
+  $("scale").innerHTML = labels.map((l, i) => {
+    const v = i + 1, sel = answers[current] === v;
+    return `<button class="opt${sel ? ' sel' : ''}" role="radio" aria-checked="${sel}" data-v="${v}" aria-label="${v}, ${l}">
+      <span class="n">${v}</span><span class="l">${l}</span></button>`;
+  }).join("");
+  $("back").disabled = current === 0;
+}
+
+function choose(v) {
+  answers[current] = v;
+  renderQuestion();
+  setTimeout(() => {
+    if (current < statements.length - 1) { current++; renderQuestion(); }
+    else showResult();
+  }, 220);
+}
+
+function showResult() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  const band = bands.find(b => total >= b.min && total <= b.max);
+  $("score").textContent = total;
+  $("bandName").textContent = band.name;
+  $("bandText").textContent = band.text;
+  // meter: low (fear) on left, high on right; scale 10–70
+  const order = [...bands].reverse();
+  const widths = { "10–26": 17, "27–36": 10, "37–46": 10, "47–56": 10, "57–70": 14 };
+  const sum = 61;
+  $("track").innerHTML = order.map(b =>
+    `<div class="${b === band ? 'on' : ''}" style="flex:${widths[b.short]}">${b.short}</div>`).join("");
+  $("pin").style.left = `${((total - 10) / 60) * 100}%`;
+  $("review").innerHTML = statements.map((s, i) =>
+    `<tr><td>${i + 1}. ${s}</td><td class="v">${answers[i]} · ${labels[answers[i]-1]}</td></tr>`).join("");
+  show("result");
+  $("score").scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+$("start").onclick = () => { current = 0; show("quiz"); renderQuestion(); };
+$("scale").addEventListener("click", e => {
+  const b = e.target.closest(".opt"); if (b) choose(+b.dataset.v);
+});
+$("back").onclick = () => { if (current > 0) { current--; renderQuestion(); } };
+$("retake").onclick = () => {
+  answers.fill(null); current = 0; show("quiz"); renderQuestion();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+document.addEventListener("keydown", e => {
+  if ($("quiz").hidden) return;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 7) choose(n);
+  if (e.key === "Backspace" || e.key === "ArrowLeft") $("back").click();
+});
+</script>
+</body>
+</html>
